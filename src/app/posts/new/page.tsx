@@ -8,7 +8,7 @@ export default function NewPostPage() {
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault(); //SPA 처럼 동작하기 위해 페이지 새로고침 막기위해 호출
     await fetch("/api/post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

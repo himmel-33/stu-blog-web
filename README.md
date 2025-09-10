@@ -1,4 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
@@ -14,23 +13,58 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Next.js에 대한 모든 것
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Image
+Next.js의 Image 컴포넌트는 표준 HTML <img> 태그를 확장한 것으로, 이미지를 자동으로 최적화  
+이 컴포넌트는 서버 사이드에서 자동으로 이미지 크기를 조정하고, 최적의 포맷을 선택하여 불필요한 데이터 전송을 줄임   
+lazy loading이 기본 설정되어 있어 뷰포트에서 벗어난 이미지는 사용자가 스크롤하여 해당 이미지가 필요할 때까지 로드되지 않음. 이러한 기능은 특히 대용량 이미지가 많은 사이트에서 페이지 로드 시간을 크게 단축시킴  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+필수 속성 : width, height, alt
 
-## Learn More
+### 라우팅
+Next.js 라우팅은 폴더,파일구조로 간단하게 만들 수 있다.(예전엔 page 라우터 요즘은 app 라우터)
+파일 기반 라우팅을 지원하고 동적 라우팅의 경우 파일명, 폴더명을 []로 감싸주면 된다.  
 
-To learn more about Next.js, take a look at the following resources:
+#### 라우팅 하는법
+<a href="/">Home</a> 
+순수 HTML 요소로, 페이지는 완전히 새로고침  
+페이지를 완전히 새로고침하므로 아래의 <Link> 태그를 사용하는 것이 좋다!  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<Link href="/posts/new">
+  <button className="~">글 추가</button>
+</Link>
+페이지 컴포넌트 간의 연결을 위해 사용  
+a 태그를 생성하여 웹 사이트가 크롤링될 수 있고 따라서 SEO에 적합하다.  
+페이지를 다시 로드하지 않고 SPA가 동작하는 것처럼 보이게 만든다.  
+JS가 로드된 상태에서 선택된 페이지에 필요한 내용만 추가적으로 가져온다.  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#### useRouter 훅 사용
+Next.js는 프로그래밍 방식으로 탐색하기 위해 useRouter 훅을 제공한다.  
+이는 사용자를 특정 동작 (예: 폼 제출)에 따라 다른 라우트로 리디렉션하고자 할 때 유용하다.  
 
-## Deploy on Vercel
+useRouter 훅은 'router' 객체를 반환하며, 여러 가지 유용한 속성과 메서드를 포함한다.  
+'router' 객체의 'push' 메서드를 사용하면 다른 페이지로 이동할 가능
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+예를 들어, 아래에서 Go Home 버튼을 누르면 홈 페이지로 돌아감  
+```tsx
+import { useRouter } from 'next/router'
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+function NavigationButton() {
+  const router = useRouter()
+
+  const goToHomePage = () => {
+    router.push('/')
+  }
+
+  return (
+    <button onClick={goToHomePage}>
+      Go Home
+    </button>
+  )
+}
+
+export default NavigationButton
+```
+
+### API route
