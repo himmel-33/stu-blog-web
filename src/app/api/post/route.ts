@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-let posts: { id: string; title: string; content: string }[] = [];
+export let posts: { id: string; title: string; content: string }[] = [];
 
 export async function GET() {
   return NextResponse.json(posts);
