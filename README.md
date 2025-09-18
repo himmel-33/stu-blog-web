@@ -13,6 +13,15 @@ pnpm dev
 bun dev
 ```
 
+## Next로 만드는 블로그 구현순서
+1. 메인화면 및 블로그 글 추가삭제 자세히 보기 등 라우팅 주소 구현 및 구조 설정
+2. Clerk으로 로그인 시스템 구현 및 OAuth 으로 소셜로그인 시스템 구현하기
+3. 사용자 개인화 및 DB 구조설계 및 연동
+4. DB 온라인화 및 OpenAI 기술을 활용한 차별화
+5. TailwindCSS or Styled-Components 활용한 디자인 (Three.js 활용한 로고)
+6. SEO 성능 최적화 및 CI/CD 및 테스트코드 활용
+
+
 ## Next.js에 대한 모든 것
 
 ### Image
