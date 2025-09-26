@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 async function getPost(id: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/post/${id}`);
+  const res = await fetch(`${baseUrl}/api/post/${id}`);
   if (!res.ok) return null;
   return res.json();
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./css/globals.css";
+import { ClerkProvider, UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { dark } from "@clerk/themes"; 
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,17 +14,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className="max-w-2xl mx-auto p-4">
-        <header className="mb-4">
-          <h1 className="text-2xl font-bold">My Blog</h1>
-          <nav className="space-x-4">
-            <a href="/">Home</a>
-            <a href="/posts">Posts</a>
-          </nav>
-        </header>
-        <main>{children}</main>
-      </body>
-    </html>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
+      <html lang="ko" className="dark">
+        <body className="min-w-0 max-w-full sm:min-w-[400px] sm:max-w-2xl md:min-w-[600px] md:max-w-4xl lg:min-w-[900px] lg:max-w-6xl mx-auto px-2 sm:px-4 md:px-8 lg:px-16 py-4">
+          <header className="mb-4 flex justify-between items-center w-full">
+            <h1 className="text-2xl font-bold bg-amber-300">My Blog</h1>
+            <nav className="space-x-4 bg-blue-400">
+              <a href="/">Home</a>
+              <a href="/posts">Posts</a>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <SignInButton>
+                  <span className="cursor-pointer">Sign In</span>
+                </SignInButton>
+                <SignUpButton>
+                  <span className="cursor-pointer">Sign Up</span>
+                </SignUpButton>
+              </SignedOut>
+            </nav>
+          </header>
+          <main>{children}</main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

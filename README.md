@@ -15,7 +15,7 @@ bun dev
 
 ## Next로 만드는 블로그 구현순서
 1. 메인화면 및 블로그 글 추가삭제 자세히 보기 등 라우팅 주소 구현 및 구조 설정
-2. Clerk으로 로그인 시스템 구현 및 OAuth 으로 소셜로그인 시스템 구현하기
+2. Clerk으로 로그인 시스템 구현(clerk 안에서 OAuth소셜로그인 지원)
 3. 사용자 개인화 및 DB 구조설계 및 연동
 4. DB 온라인화 및 OpenAI 기술을 활용한 차별화
 5. TailwindCSS or Styled-Components 활용한 디자인 (Three.js 활용한 로고)
@@ -77,3 +77,41 @@ export default NavigationButton
 ```
 
 ### API route
+
+### @clerk/nextjs
+Clerk 사용하기  
+```bash
+npm install @clerk/nextjs
+```
+라이브러리 설치
+
+middleware.ts 추가 
+```tsx
+import { authMiddleware } from "@clerk/nextjs";
+
+export default authMiddleware();
+
+export const config = {
+  matcher: ["/((?!.*\\..*|_next).*)", "/"], // 보호할 경로
+};
+```
+
+app/layout.tsx 수정
+```tsx
+import { ClerkProvider } from "@clerk/nextjs";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ClerkProvider>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
+  );
+}
+```
+Next step
+
+#### 로그인 회원가입 페이지 구현
+#### Clerk 대시보드에서 OAuth Provider 켜기
+#### 로그인 상태 이용
