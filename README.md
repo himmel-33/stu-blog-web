@@ -78,8 +78,9 @@ export default NavigationButton
 
 ### API route
 
-### @clerk/nextjs
-Clerk 사용하기  
+### Clerk 사용하여 로그인 사용자인증 하기
+
+#### Clerk 세팅
 ```bash
 npm install @clerk/nextjs
 ```
@@ -110,8 +111,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   );
 }
 ```
-Next step
 
 #### 로그인 회원가입 페이지 구현
-#### Clerk 대시보드에서 OAuth Provider 켜기
-#### 로그인 상태 이용
+Nav 바 안에 Clerk 내장컴포넌트 사용
+```tsx
+<nav className="space-x-4 bg-blue-400">
+              <a href="/">Home</a>
+              <a href="/posts">Posts</a>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <SignInButton>
+                  <span className="cursor-pointer">Sign In</span>
+                </SignInButton>
+                <SignUpButton>
+                  <span className="cursor-pointer">Sign Up</span>
+                </SignUpButton>
+              </SignedOut>
+            </nav>
+```
+#### Clerk 대시보드에서 webhooks 통한 DB 동기화 
+Prisma ORM(Object Relational Mapper) 라이브러리 사용 DB 조작  
+
+##### prisma 설치 및 초기화
+```bash
+npm install prisma @prisma/client
+npx prisma init
+```
+모델 정의 후 마이그레이션 명령으로 실제 DB테이블 생성 //이부분부터 다시시작
+```prisma
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+}
+```
+```bash
+npx prisma migrate dev --name init
+```
+#### 로그인 상태 이용(글추가 기능은 로그인이 되어 있을때만 가능하게 )
