@@ -78,8 +78,10 @@ export default NavigationButton
 
 ### API route
 
-### Clerk 사용하여 로그인 사용자인증 하기
 
+---
+
+### Clerk 사용하여 로그인 사용자인증 하기
 #### Clerk 세팅
 ```bash
 npm install @clerk/nextjs
@@ -141,9 +143,10 @@ npx prisma init
 ```
 모델 정의 후 마이그레이션 명령으로 실제 DB테이블 생성 //이부분부터 다시시작
 ```prisma
-model User {
+model user_tb {
   id        String   @id @default(uuid())
   clerkId   String   @unique
+  email     String
   name      String?
   createdAt DateTime @default(now())
 }
@@ -151,4 +154,89 @@ model User {
 ```bash
 npx prisma migrate dev --name init
 ```
+##### clerk대쉬보드에서 endpoint 설정 후 route 설정
+ 파일구조대로 라운팅되는 Next.js 를 이해하고 http://localhost:3000/api/clerk-webhook 엔드포인트설정
+
+
+clerk-webhook 폴더에 route.ts 파일
+```tsx
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export async function POST(req: Request) {
+  const body = await req.json();
+
+  // 실제 들어오는 데이터 구조 확인
+  console.log(JSON.stringify(body, null, 2));
+
+  // Clerk에서 오는 user.created 이벤트 데이터 예시
+  const { id, email_addresses, first_name, last_name } = body.data;
+
+  await prisma.user_tb.create({
+    data: {
+      clerkId: id,
+      email: email_addresses?.[0]?.email_address ?? "",
+      name: [first_name, last_name].filter(Boolean).join(" "),
+    },
+  });
+
+  return NextResponse.json({ ok: true });
+}
+```
+<b>문제점</b>  
+webhook으로 endpoint는 정상적으로 호출하고 있는 것 같으나 자꾸 실패가 뜸
+<b>오류도출 방안</b>  
+1. 서버 로그에 에러 메시지 추가 및 필수값 누락여부 더블체크  
+2. webhook 응답 코드 확인
+<b>문제점</b>  
+로컬로 접근하고있었는데 clerk 시스템에서 내 로컬에 접근을 못하고있었음 
+<b>해결법</b>  
+로컬을 외부로 열어주는 ngrok 이용 clerk이 이용할 수 있게 만듬  
+ 
+ 웹에서 회원가입 후 토큰 생성 다음 터미널에 적용
+ ```bash
+ npm i -g ngrok
+ ngrok config add-authtoken $YOUR_AUTHTOKEN
+ ngrok http 3000
+ ``` 
+터미널을 껏다가 다시 키면 clerk endpoint를 다시 설정해줘야함!!!
+
+<b>문제점</b>  
+prisma/client가 생성되지 않았다고 난리를 침 나는 생성을 한것 같은데
+<b>해결법</b>  
+
+해결법은 모르겠고 에러코드임 나중에 내가 알아서 해결하겠지
+```bash
+⨯ Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
+    at __TURBOPACK__module__evaluation__ (src\app\api\clerk-webhook\route.ts:4:16)
+    at Object.<anonymous> (C:\Users\82104\Desktop\Next\stu-blog-web\.next\server\app\api\clerk-webhook\route.js:5:3)
+  2 | import { PrismaClient } from "@prisma/client";
+  3 |
+> 4 | const prisma = new PrismaClient();
+    |                ^
+  5 |
+  6 | export async function POST(req: Request) {
+  7 |   const body = await req.json(); {
+  page: '/api/clerk-webhook'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 9.3s
+ POST /api/clerk-webhook 500 in 15450ms
+ ⨯ Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
+    at __TURBOPACK__module__evaluation__ (src\app\api\clerk-webhook\route.ts:4:16)
+    at Object.<anonymous> (C:\Users\82104\Desktop\Next\stu-blog-web\.next\server\app\api\clerk-webhook\route.js:5:3)
+  2 | import { PrismaClient } from "@prisma/client";
+  3 |
+> 4 | const prisma = new PrismaClient();
+    |                ^
+  5 |
+  6 | export async function POST(req: Request) {
+  7 |   const body = await req.json(); {
+  page: '/api/clerk-webhook'
+}
+ POST /api/clerk-webhook 500 in 1436ms
+```
+
 #### 로그인 상태 이용(글추가 기능은 로그인이 되어 있을때만 가능하게 )
