@@ -17,7 +17,7 @@ datasource db {
 model user_tb {
   id        String   @id @default(uuid())
   clerkId   String   @unique
-  email     String   // ← Clerk 이메일 저장용 필드 추가
+  email     String
   name      String?
   createdAt DateTime @default(now())
 }
