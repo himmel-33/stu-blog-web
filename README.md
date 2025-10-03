@@ -186,11 +186,7 @@ export async function POST(req: Request) {
 }
 ```
 <b>문제점</b>  
-webhook으로 endpoint는 정상적으로 호출하고 있는 것 같으나 자꾸 실패가 뜸
-<b>오류도출 방안</b>  
-1. 서버 로그에 에러 메시지 추가 및 필수값 누락여부 더블체크  
-2. webhook 응답 코드 확인
-<b>문제점</b>  
+webhook으로 endpoint는 정상적으로 호출하고 있는 것 같으나 자꾸 실패가 뜸  
 로컬로 접근하고있었는데 clerk 시스템에서 내 로컬에 접근을 못하고있었음 
 <b>해결법</b>  
 로컬을 외부로 열어주는 ngrok 이용 clerk이 이용할 수 있게 만듬  
@@ -204,39 +200,30 @@ webhook으로 endpoint는 정상적으로 호출하고 있는 것 같으나 자�
 터미널을 껏다가 다시 키면 clerk endpoint를 다시 설정해줘야함!!!
 
 <b>문제점</b>  
-prisma/client가 생성되지 않았다고 난리를 침 나는 생성을 한것 같은데
+prisma/client가 생성되지 않았다고 난리를 침 나는 분명히 생성을 했는데  
+migrate 하면 자동설치 된다. 안되면 npm i @prisma/client 해주면됨  
+그리고 npx prisma generate 이 명령으로 수동실행 가능
 <b>해결법</b>  
 
-해결법은 모르겠고 에러코드임 나중에 내가 알아서 해결하겠지
-```bash
-⨯ Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at __TURBOPACK__module__evaluation__ (src\app\api\clerk-webhook\route.ts:4:16)
-    at Object.<anonymous> (C:\Users\82104\Desktop\Next\stu-blog-web\.next\server\app\api\clerk-webhook\route.js:5:3)
-  2 | import { PrismaClient } from "@prisma/client";
-  3 |
-> 4 | const prisma = new PrismaClient();
-    |                ^
-  5 |
-  6 | export async function POST(req: Request) {
-  7 |   const body = await req.json(); {
-  page: '/api/clerk-webhook'
+schema.prisma 에서 output 경로 설정때문에 client가 다른 위치로 생성되어  
+import { PrismaClient } from "@prisma/client"; 으로 경로를 못 찾았던 거라  
+output 경로를 제거해주고 npx prisma generate 다시해준다.  
+```jsx
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
 }
- ○ Compiling /_error ...
- ✓ Compiled /_error in 9.3s
- POST /api/clerk-webhook 500 in 15450ms
- ⨯ Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at __TURBOPACK__module__evaluation__ (src\app\api\clerk-webhook\route.ts:4:16)
-    at Object.<anonymous> (C:\Users\82104\Desktop\Next\stu-blog-web\.next\server\app\api\clerk-webhook\route.js:5:3)
-  2 | import { PrismaClient } from "@prisma/client";
-  3 |
-> 4 | const prisma = new PrismaClient();
-    |                ^
-  5 |
-  6 | export async function POST(req: Request) {
-  7 |   const body = await req.json(); {
-  page: '/api/clerk-webhook'
-}
- POST /api/clerk-webhook 500 in 1436ms
 ```
-잔디심기용 추가
+
+<b>문제점</b>  
+DB생성은 정작적으로 되는데 clerk 시스템적으로 user.created 하나만 구독해도 회원이 생기면 session.created 이벤트도 같이 발생해서 DB값 중복 저장됨
+<b>해결법</b>  
+라우터에서 값을 삽입하기 전 event.type을 받고 넣으면 된다.  
+
+```tsx
+if (body.type === "user.created") 
+```
+
+created.at 아이디 생성 시점이 한국시간이 아님 이거 수정
+
 #### 로그인 상태 이용(글추가 기능은 로그인이 되어 있을때만 가능하게 )
