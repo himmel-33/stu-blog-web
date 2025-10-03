@@ -12,9 +12,6 @@ export async function POST(req: Request) {
   const clerkId = user.id;
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
 
-  // Clerk Webhook 전체 데이터 구조 확인
-  console.log(JSON.stringify(body, null, 2));
-
   // 필수값 체크
   if (!clerkId || !email) {
     console.error("필수값 누락:", { clerkId, email });
@@ -22,13 +19,16 @@ export async function POST(req: Request) {
   }
 
   try {
-    await prisma.user_tb.create({
-      data: {
-        clerkId,
-        email,
-        name,
-      },
-    });
+    if (body.type === "user.created") { // session event 방지
+      await prisma.user_tb.create({
+        data: {
+          clerkId,
+          email,
+          name,
+        },
+      });
+      console.log("DB 삽입 성공:", { clerkId, email, name }); // 성공 로그
+    }
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Prisma Error:", error);
