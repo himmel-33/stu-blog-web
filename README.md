@@ -224,6 +224,5 @@ DB생성은 정작적으로 되는데 clerk 시스템적으로 user.created 하�
 if (body.type === "user.created") 
 ```
 
-created.at 아이디 생성 시점이 한국시간이 아님 이거 수정
-
+created.at 아이디 생성 시점이 한국시간이 아님 이거 수정 할것
 #### 로그인 상태 이용(글추가 기능은 로그인이 되어 있을때만 가능하게 )
