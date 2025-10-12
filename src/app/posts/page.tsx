@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-type Post = { id: string; title: string };
+type Post = { id: string; title: string; author?: string };
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -26,6 +26,9 @@ export default function PostsPage() {
             <Link href={`/posts/${post.id}`} className="text-blue-600 underline">
               {post.title}
             </Link>
+            {post.author && (
+              <span className="ml-2 text-gray-500 text-sm">by {post.author}</span>
+            )}
           </li>
         ))}
       </ul>

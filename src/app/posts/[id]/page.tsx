@@ -16,6 +16,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
   return (
     <article>
       <h2 className="text-xl font-bold mb-2">{post.title}</h2>
+      <div className="mb-2 text-gray-500 text-sm">작성자: {post.author}</div>
       <div>{post.content}</div>
     </article>
   );
