@@ -23,6 +23,7 @@ export default function RootLayout({
               <a href="/">Home</a>
               <a href="/posts">Posts</a>
               <SignedIn>
+                <a href="/mypage">MyPage</a> {/* 마이페이지 링크 추가 */}
                 <UserButton />
               </SignedIn>
               <SignedOut>
