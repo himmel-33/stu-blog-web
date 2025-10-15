@@ -1,14 +1,25 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
-export let posts: { id: string; title: string; content: string; author: string }[] = [];
-
-export async function GET() {
-  return NextResponse.json(posts);
-}
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-  const { title, content, author } = await req.json();
-  const id = Date.now().toString();
-  posts.unshift({ id, title, content, author });
-  return NextResponse.json({ id, title, content, author });
+  const { title, content, imageUrl, userId } = await req.json();
+
+  // userId는 Clerk의 user.id(clerkId)임
+  const user = await prisma.user_tb.findUnique({ where: { clerkId: userId } });
+  if (!user) {
+    return NextResponse.json({ error: "유저를 찾을 수 없습니다." }, { status: 400 });
+  }
+
+  const post = await prisma.post_tb.create({
+    data: {
+      title,
+      content,
+      imageUrl,
+      userId: user.id,
+    },
+  });
+
+  return NextResponse.json(post);
 }

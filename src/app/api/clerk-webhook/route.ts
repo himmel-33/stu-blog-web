@@ -5,33 +5,29 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   const body = await req.json();
-
-  // 안전하게 구조 분해
   const user = body.data;
   const email = user.email_addresses?.[0]?.email_address ?? "";
   const clerkId = user.id;
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
+  const phone = user.phone_numbers?.[0]?.phone_number ?? null; // Clerk phone 번호
 
-  // 필수값 체크
   if (!clerkId || !email) {
-    console.error("필수값 누락:", { clerkId, email });
     return NextResponse.json({ error: "필수값 누락" }, { status: 400 });
   }
 
   try {
-    if (body.type === "user.created") { // session event 방지
+    if (body.type === "user.created") {
       await prisma.user_tb.create({
         data: {
           clerkId,
           email,
           name,
+          phone, // phone 저장
         },
       });
-      console.log("DB 삽입 성공:", { clerkId, email, name }); // 성공 로그
     }
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Prisma Error:", error);
     return NextResponse.json({ error: "DB 저장 실패" }, { status: 500 });
   }
 }

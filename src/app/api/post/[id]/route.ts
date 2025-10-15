@@ -1,13 +1,25 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
-// posts 배열을 임시로 가져오는 방법 (실제 서비스에서는 DB 사용)
-import { posts } from "../route";
+const prisma = new PrismaClient();
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const post = posts.find((p) => p.id === params.id);
-  if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
+export async function POST(req: Request) {
+  const { title, content, imageUrl, userId } = await req.json();
+
+  // userId는 Clerk의 user.id(clerkId)임
+  const user = await prisma.user_tb.findUnique({ where: { clerkId: userId } });
+  if (!user) {
+    return NextResponse.json({ error: "유저를 찾을 수 없습니다." }, { status: 400 });
+  }
+
+  const post = await prisma.post_tb.create({
+    data: {
+      title,
+      content,
+      imageUrl,
+      userId: user.id,
+    },
+  });
+
   return NextResponse.json(post);
 }
