@@ -18,5 +18,18 @@ model user_tb {
   clerkId   String   @unique
   email     String
   name      String?
+  phone     String?      // ← 핸드폰 번호(옵션)
   createdAt DateTime @default(now())
+  posts     post_tb[]    // ← 작성한 글들(1:N 관계)
+}
+
+model post_tb {
+  id        String   @id @default(uuid())
+  category  String
+  title     String
+  content   String
+  imageUrl  String?      // ← 이미지 URL(옵션)\
+  createdAt DateTime @default(now())
+  userId    String
+  user      user_tb  @relation(fields: [userId], references: [id])
 }
