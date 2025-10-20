@@ -197,7 +197,7 @@ webhook으로 endpoint는 정상적으로 호출하고 있는 것 같으나 자�
  ngrok config add-authtoken $YOUR_AUTHTOKEN
  ngrok http 3000
  ``` 
-터미널을 껏다가 다시 키면 clerk endpoint를 다시 설정해줘야함!!!
+ clerk에서 내 로컬에 접속하려면 ngrok 터미널을 실행시켜둔 채로 해야된다.
 
 <b>문제점</b>  
 prisma/client가 생성되지 않았다고 난리를 침 나는 분명히 생성을 했는데  
@@ -241,10 +241,17 @@ step1
 글 추가에서 카테고리 추가  
 mypage에 나의 인포가 나오게 수정 
 글 테이블 추가 및 사용자 DB랑 외래키 연결 
-+일반 회원가입 사용자랑 소셜로그인 사용자 다 DB에 일괄저장할 수 있도록 DB구현 (완료) 
++일반 회원가입 사용자랑 소셜로그인 사용자 다 DB에 일괄저장할 수 있도록 DB구현  
+일반 로그인도 시도하고 규격 일치한지 확인 완료  
+글추가 post_tb 삽입 정상적으로 작동 & 외래키 관계 잘 적용
 
+clerk에서 내 로컬에 접속하려면 ngrok 터미널을 실행시켜둔 채로 해야된다!  
+```bash
+ngrok http 3000  
+```
+DB 굳이 키지않고 prisma studio로 자세히 확인 가능  
+```bash
+npx prisma studio
+```
 
--> 일반 로그인도 시도하고 규격 일치한지 확인부터
-글추가 부분 route 수정 및 DB 삽입 손봐서 글 생성 시 DB 삽입 후 post 게시 잘되는지 확인!!!
-
-step2  
+이제 디자인
