@@ -25,6 +25,7 @@ export async function POST(req: Request) {
           phone, // phone 저장
         },
       });
+      console.log("[clerk-webhook] user.created -> inserted", { clerkId, email });
     }
     return NextResponse.json({ ok: true });
   } catch (error) {
