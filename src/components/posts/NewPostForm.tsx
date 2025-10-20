@@ -8,6 +8,7 @@ export default function NewPostPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [category, setCategory] = useState("일반");
   const router = useRouter();
 
   if (!isSignedIn) {
@@ -17,6 +18,8 @@ export default function NewPostPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!user) return;
+    
     await fetch("/api/post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -24,6 +27,7 @@ export default function NewPostPage() {
         title,
         content,
         imageUrl,
+        category,
         userId: user.id, // Clerk의 user.id를 user_tb의 clerkId와 매칭해야 함
       }),
     });
@@ -40,6 +44,22 @@ export default function NewPostPage() {
           onChange={(e) => setTitle(e.target.value)}
           required
         />
+      </div>
+      <div>
+        <label className="block">카테고리</label>
+        <select
+          className="border px-2 py-1 w-full"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        >
+          <option value="일반">일반</option>
+          <option value="기술">기술</option>
+          <option value="일상">일상</option>
+          <option value="여행">여행</option>
+          <option value="음식">음식</option>
+          <option value="스포츠">스포츠</option>
+        </select>
       </div>
       <div>
         <label className="block">내용</label>
