@@ -254,4 +254,4 @@ DB 굳이 키지않고 prisma studio로 자세히 확인 가능
 npx prisma studio
 ```
 
-이제 디자인
+이제 디자인 손볼것
