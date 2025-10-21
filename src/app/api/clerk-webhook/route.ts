@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const user = body.data;
+  const user = body.data; //전체값 삽입
   const email = user.email_addresses?.[0]?.email_address ?? "";
   const clerkId = user.id;
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
