@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
+//post_tb 테이블에 데이터 조회
 export async function GET() {
   try {
     const posts = await prisma.post_tb.findMany({
