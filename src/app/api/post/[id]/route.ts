@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "유저를 찾을 수 없습니다." }, { status: 400 });
   }
-
+  //post_tb 테이블에 데이터 삽입
   const post = await prisma.post_tb.create({
     data: {
       title,
