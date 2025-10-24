@@ -254,4 +254,5 @@ DB 굳이 키지않고 prisma studio로 자세히 확인 가능
 npx prisma studio
 ```
 
-이제 디자인 손볼것!!!
+이제 디자인 
+디자인 전에 three.js 로 로고 제작
