@@ -255,4 +255,4 @@ npx prisma studio
 ```
 
 이제 디자인 
-디자인 전에 three.js 로 로고 제작
+디자인 전에 three.js 로 로고 제작!
