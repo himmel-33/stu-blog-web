@@ -8,22 +8,35 @@ datasource db {
 }
 
 model user_tb {
-  id        String    @id @default(uuid())
-  clerkId   String    @unique
+  id        String      @id @default(uuid())
+  clerkId   String      @unique
   email     String
   name      String?
-  createdAt DateTime  @default(now())
+  createdAt DateTime    @default(now())
   phone     String?
   posts     post_tb[]
+  comments  comment_tb[]
 }
 
 model post_tb {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   title     String
   content   String
   imageUrl  String?
-  createdAt DateTime @default(now())
+  createdAt DateTime     @default(now())
   userId    String
   category  String
+  user      user_tb      @relation(fields: [userId], references: [id])
+  comments  comment_tb[]
+}
+
+model comment_tb {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  postId    String
   user      user_tb  @relation(fields: [userId], references: [id])
+  post      post_tb  @relation(fields: [postId], references: [id])
 }
