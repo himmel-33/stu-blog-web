@@ -254,5 +254,13 @@ DB 굳이 키지않고 prisma studio로 자세히 확인 가능
 npx prisma studio
 ```
 
+
+---
+post 게시글 mypage에서 나의 글 볼 수 있게 구현 및 수정 삭제 기능 추가  
+comment_tb 추가하여 게시글에 댓글 기능 추가 (본인 댓글만 삭제 가능)  
+---
+
 이제 디자인 
 디자인 전에 three.js 로 로고 제작!
+다음엔 블로그 디자인 
+ shadcn/ui (최고의 최신 UI 라이브러리) 사용 및 tailwind CSS 감각 키우기
