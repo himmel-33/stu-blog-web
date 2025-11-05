@@ -263,6 +263,6 @@ comment_tb 추가하여 게시글에 댓글 기능 추가 (본인 댓글만 삭�
 이제 디자인 
 디자인 전에 three.js 로 로고 제작!
 다음엔 블로그 디자인 
- shadcn/ui (최고의 최신 UI 라이브러리) 사용 및 tailwind CSS 감각 키우기!!  
+ shadcn/ui (최고의 최신 UI 라이브러리) 사용 및 tailwind CSS 감각 키우기!!  !!
 
  
